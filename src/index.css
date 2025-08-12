@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    @apply border-slate-200;
+  }
+  :root {
+    --bg:#ffffff;
+    --navy:#111640;
+    --accent:#f6d467;
+    --text:#191e46;
+    --muted:#75768a;
+    --rule:#e6e8f0;
+  }
+  body {
+    @apply text-slate-900; /* fallback */
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+  }
+}
+
+/* Mobile Safari zoom prevention */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+textarea {
+  font-size: 18px !important;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+/* Placeholder styling for better contrast on yellow background */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+  opacity: 1;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+  opacity: 1;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Better mobile touch targets */
+button,
+[role="button"],
+[role="radio"],
+[role="checkbox"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Better focus styles */
+input:focus,
+textarea:focus,
+button:focus,
+[tabindex]:focus {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+/* Improved backdrop blur support */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Safe area support for modern devices */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Hide scrollbars completely */
+html, body {
+  overflow-x: hidden;
+}
+
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+/* Prevent zoom on double tap */
+* {
+  touch-action: manipulation;
+}
+
+/* Better button hover states */
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading state improvements */
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Clean transitions */
+.transition-colors {
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HELLYEAHNAF – Contest Rules</title>
+  <style>
+    /*
+      Palette sampled from your PDF screenshot:
+      --navy:   #111640 (primary background / headings)
+      --accent: #f6d467 (hashtag accent)
+      --text:   #191e46 (body text tint matching the PDF)
+      --rule:   #e6e8f0 (light divider)
+      --muted:  #75768a (secondary text)
+    */
+    :root{
+      --bg:#ffffff;
+      --navy:#111640;
+      --accent:#f6d467;
+      --text:#191e46;
+      --muted:#75768a;
+      --rule:#e6e8f0;
+    }
+
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";line-height:1.6}
+
+    .container{max-width:960px;margin:0 auto}
+
+    /* Top brand band */
+    .hero{background:var(--navy);color:#fff;padding:48px 24px 36px;border-bottom:1px solid #0c1236}
+    .hero-inner{max-width:960px;margin:0 auto;text-align:left}
+    .brand-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+
+    .title{margin:0;font-size:3rem;font-weight:900;letter-spacing:0.02em}
+    .title .hash{color:var(--accent)}
+    .subtitle{margin:6px 0 0 0;font-size:1.6rem;font-weight:800;color:#fff}
+    .campaign-note{margin-top:22px;color:#d7d8df;font-style:italic}
+
+    /* Sections */
+    .content{padding:28px 20px}
+    .divider{height:1px;background:var(--rule);margin:18px 0}
+
+    .section{margin:26px 0 32px}
+    .section-title{display:flex;align-items:center;gap:12px;margin:0 0 14px 0;color:#fff}
+    .section-pill{background:var(--navy);border-radius:24px;padding:8px 14px 10px;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
+
+    .subsection{margin:8px 0;padding-left:22px}
+    .subsection-number{font-weight:800;color:var(--text);margin-right:8px}
+
+    .prohibited-list{border:1px solid var(--rule);padding:14px 18px;margin:14px 0;background:#fff}
+    .prohibited-list h4{margin:0 0 8px 0;color:var(--text);font-weight:900}
+    .prohibited-item{position:relative;padding-left:22px;margin:8px 0}
+    .prohibited-item[data-marker]:before{content:attr(data-marker) ".";position:absolute;left:0;top:0;color:var(--text)}
+
+    .prize-info{border:2px solid var(--navy);padding:18px;margin:14px 0;text-align:center}
+    .prize-amount{font-size:2rem;font-weight:900;margin:6px 0 10px;letter-spacing:.02em;color:var(--navy)}
+
+    .footer-note{border:1px solid var(--rule);padding:16px;margin-top:26px;color:var(--muted)}
+
+    @media (max-width:640px){
+      .title{font-size:2.2rem}
+      .subtitle{font-size:1.25rem}
+      .content{padding:18px 14px}
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1 class="title"><span class="hash">#</span>HELLYEAHNAF</h1>
+      <div class="subtitle">Contest Rules</div>
+      <div class="campaign-note">New American Funding reserves the right to modify or terminate the contest at any time without further notice.</div>
+    </div>
+  </header>
+
+  <main class="container content">
+
+    <section class="section">
+      <h3 class="section-title"><span class="section-pill">1&nbsp;&nbsp;Eligibility</span></h3>
+      <div class="subsection"><span class="subsection-number">1.1</span> Open to legal residents of the United States who are 18 years of age or older at the time of entry.</div>
+      <div class="subsection"><span class="subsection-number">1.2</span> Employees of New American Funding (NAF), paid influencers, and paid UGC creators are not eligible to win cash prizes.</div>
+      <div class="subsection"><span class="subsection-number">1.3</span> Void where prohibited by law.</div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title"><span class="section-pill">2&nbsp;&nbsp;Entry Requirements</span></h3>
+      <div class="subsection"><span class="subsection-number">2.1</span> Participants must follow @newamericanfunding on both Instagram and TikTok.</div>
+      <div class="subsection"><span class="subsection-number">2.2</span> Participants must post an original short-form video to Instagram or TikTok using the official hashtag: <strong>#HellYeahNAF</strong>.</div>
+      <div class="subsection"><span class="subsection-number">2.3</span> The video must include the phrase “hell yeah” and the name “New American Funding,” either spoken or shown on screen.</div>
+      <div class="subsection"><span class="subsection-number">2.4</span> Video must be posted during the official contest period.</div>
+      <div class="subsection"><span class="subsection-number">2.5</span> After posting, participants must send a direct message to @newamericanfunding on the platform used to notify the brand of their entry.</div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title"><span class="section-pill">3&nbsp;&nbsp;Content Guidelines</span></h3>
+      <div class="subsection"><span class="subsection-number">3.1</span> All videos must comply with Instagram and TikTok community guidelines and terms of service.</div>
+      <div class="subsection"><span class="subsection-number">3.2</span> All content must be the original work of the participant.</div>
+      <div class="subsection"><span class="subsection-number">3.3</span> The content must NOT include:</div>
+
+      <div class="prohibited-list">
+        <h4>Prohibited</h4>
+        <div class="prohibited-item" data-marker="a">Financial advice from unlicensed individuals</div>
+        <div class="prohibited-item" data-marker="b">Claims or suggestions of guaranteed loan approval</div>
+        <div class="prohibited-item" data-marker="c">Specific interest rates, APRs, or loan terms</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title"><span class="section-pill">4&nbsp;&nbsp;Prizing</span></h3>
+      <div class="subsection"><span class="subsection-number">4.1</span> Two (2) winners will be selected each week during the contest period to receive $500 each.</div>
+      <div class="prize-info">
+        <div class="prize-amount">$500 PER WINNER</div>
+        <div>2 Winners Selected Weekly</div>
+      </div>
+      <div class="subsection"><span class="subsection-number">4.2</span> Winners will be chosen based on originality, inspiration, and organic reach.</div>
+      <div class="subsection"><span class="subsection-number">4.3</span> Only unpaid participants are eligible to win cash prizes.</div>
+      <div class="subsection"><span class="subsection-number">4.4</span> Winners will be contacted via direct message and must respond within 5 days to claim their prize.</div>
+      <div class="subsection"><span class="subsection-number">4.5</span> Prize payments will be delivered via digital gift card or check, at New American Funding's discretion.</div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title"><span class="section-pill">5&nbsp;&nbsp;Usage Rights</span></h3>
+      <div class="subsection"><span class="subsection-number">5.1</span> By entering, participants grant New American Funding the right to repost, share, or use submitted content in its marketing and promotional materials, with or without credit.</div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title"><span class="section-pill">6&nbsp;&nbsp;Disqualification</span></h3>
+      <div class="subsection"><span class="subsection-number">6.1</span> New American Funding reserves the right to disqualify any entry for inappropriate content or rule violations.</div>
+      <div class="subsection"><span class="subsection-number">6.2</span> Failure to meet any of the above requirements may result in disqualification.</div>
+      <div class="subsection"><span class="subsection-number">6.3</span> New American Funding reserves the right to terminate the contest without further notice for any reason.</div>
+    </section>
+
+    <div class="footer-note">
+      <strong>Campaign Length:</strong> New American Funding reserves the right to modify or terminate the contest at any time without further notice.
+    </div>
+  </main>
+</body>
+</html>
