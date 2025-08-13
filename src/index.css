@@ -108,6 +108,20 @@ html, body {
   touch-action: manipulation;
 }
 
+/* Mobile viewport and safe area optimizations */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+}
+
+/* Improve tap targets and spacing on mobile */
+.mobile-edge-padding {
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+}
+
 /* Better button hover states */
 button:hover:not(:disabled) {
   transform: translateY(-1px);

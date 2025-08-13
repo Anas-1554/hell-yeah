@@ -144,8 +144,8 @@ export const ContactQuestion: React.FC<ContactQuestionProps> = ({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`
-                  relative flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all
+                 className={`
+                  relative flex items-center p-5 rounded-lg border-2 cursor-pointer transition-all
                   ${isSelected 
                     ? 'border-black bg-white bg-opacity-20' 
                     : 'border-black border-opacity-30 hover:border-black hover:bg-white hover:bg-opacity-10'
@@ -158,8 +158,8 @@ export const ContactQuestion: React.FC<ContactQuestionProps> = ({
                 aria-checked={isSelected}
               >
                 {/* Option Letter */}
-                <div className={`
-                  flex items-center justify-center w-8 h-8 rounded-md text-sm font-bold mr-4
+                 <div className={`
+                   flex items-center justify-center w-9 h-9 rounded-md text-sm font-bold mr-4
                   ${isSelected 
                     ? 'text-white' 
                     : 'bg-white bg-opacity-20 text-black'
@@ -182,8 +182,8 @@ export const ContactQuestion: React.FC<ContactQuestionProps> = ({
                 </div>
 
                 {/* Checkbox */}
-                <div className={`
-                  w-5 h-5 rounded border-2 transition-all
+                 <div className={`
+                   w-6 h-6 rounded border-2 transition-all
                   ${isSelected 
                     ? 'border-black' 
                     : 'border-black border-opacity-30'
@@ -192,7 +192,7 @@ export const ContactQuestion: React.FC<ContactQuestionProps> = ({
                 style={{ backgroundColor: isSelected ? 'var(--navy)' : 'transparent' }}
                 >
                   {isSelected && (
-                    <svg className="w-3 h-3 text-white mx-auto mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-3.5 h-3.5 text-white mx-auto mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   )}

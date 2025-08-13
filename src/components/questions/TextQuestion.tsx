@@ -160,7 +160,7 @@ export const TextQuestion: React.FC<TextQuestionProps> = ({
     color: 'var(--text)',
     outline: 'none',
     transition: 'border-color 0.2s ease',
-    minHeight: '56px', // Better touch target for mobile
+    minHeight: '64px', // Better touch target for mobile
     appearance: 'none' as any,
     WebkitAppearance: 'none' as any,
     MozAppearance: 'textfield' as any,

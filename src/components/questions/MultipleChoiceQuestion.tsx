@@ -80,7 +80,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
     display: 'flex',
     alignItems: 'center',
     padding: '16px 20px',
-    margin: '8px 0',
+    margin: '12px 0',
     backgroundColor: isSelected(optionValue) ? 'var(--navy)' : '#FFFFFF',
     color: isSelected(optionValue) ? '#FFFFFF' : 'var(--text)',
     border: `2px solid ${isSelected(optionValue) ? 'var(--navy)' : 'var(--text)'}`,
@@ -88,7 +88,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
     cursor: 'pointer',
     fontSize: '16px',
     fontWeight: '500',
-    minHeight: '56px', // Better touch target for mobile
+    minHeight: '64px', // Better touch target for mobile
     transition: 'all 0.2s ease',
     textAlign: 'left' as const,
     outline: 'none',

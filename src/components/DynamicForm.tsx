@@ -385,7 +385,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
       </AnimatePresence>
 
       {/* Form Content */}
-      <div className="relative pt-12">
+      <div className="relative pt-12 pb-40 md:pb-48">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentQuestion?.id || 'loading'}
@@ -400,7 +400,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
       </div>
 
       {/* Navigation Controls */}
-      <div className="fixed bottom-6 left-6 right-6 z-50">
+      <div className="fixed left-6 right-6 z-50 mobile-edge-padding" style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}>
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           {/* Back Button */}
           <button
