@@ -31,7 +31,7 @@ export const BaseQuestion: React.FC<BaseQuestionProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
-      className="min-h-screen flex items-center justify-center p-4 mobile-edge-padding"
+      className="w-full"
     >
       <div className="w-full max-w-2xl">
         {/* Question Number */}

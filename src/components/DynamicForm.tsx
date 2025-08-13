@@ -51,6 +51,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
 
   const currentQuestion = getCurrentQuestion();
   const progress = getProgress();
+  const enableMilestoneToasts = totalQuestions > 4;
 
   // Notify when question changes to hide any active tooltips
   useEffect(() => {
@@ -71,15 +72,14 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
     }
   }, [showProgressNotification]);
 
-  // Check for milestone celebrations
+  // Check for milestone celebrations (disabled for short forms)
   useEffect(() => {
+    if (!enableMilestoneToasts) return;
     const currentProgress = Math.round(progress);
     const milestones = [25, 50, 75];
-    
     for (const milestone of milestones) {
       if (currentProgress >= milestone && !celebratedMilestones.has(milestone)) {
         setCelebratedMilestones(prev => new Set(prev).add(milestone));
-        
         let message = '';
         switch (milestone) {
           case 25:
@@ -92,14 +92,13 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
             message = "Amazing! You're almost done 💪";
             break;
         }
-        
         setMilestoneMessage(message);
         setShowMilestoneToast(true);
         setTimeout(() => setShowMilestoneToast(false), 3000);
         break; // Only show one milestone at a time
       }
     }
-  }, [progress, celebratedMilestones]);
+  }, [progress, celebratedMilestones, enableMilestoneToasts]);
 
   const handleNext = () => {
     if (state.currentQuestionIndex >= totalQuestions - 1) {
@@ -297,37 +296,43 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
-      {/* Logo */}
-      <div className="fixed top-4 left-4 z-50">
-        <a href="https://www.newamericanfunding.com?utm_source=naf-hellyeah-form" target="_blank" rel="noopener noreferrer">
-          <img 
-            src="/naf-logo.svg" 
-            alt="Naf" 
-            className="h-8 w-auto"
-            style={{ maxHeight: '32px' }}
-          />
-        </a>
-      </div>
-
-      {/* Time Badge */}
-      <div className="fixed top-4 right-4 z-50">
-        <div className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium shadow-sm"
-         style={{ 
-               backgroundColor: 'var(--navy)',
-               color: '#FFFFFF'
-             }}>
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          {totalQuestions - state.currentQuestionIndex <= 5 
-            ? "Take less then 2 minutes"
-            : "Takes less than 5 minutes"
-          }
+      {/* Top Header Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 py-3">
+          {/* Logo */}
+          <a href="https://www.newamericanfunding.com?utm_source=naf-hellyeah-form" target="_blank" rel="noopener noreferrer">
+            <img 
+              src="/naf-logo.svg" 
+              alt="Naf" 
+              className="h-48 sm:h-48 w-auto"
+              style={{ maxHeight: '32px' }}
+            />
+          </a>
+          
+          {/* Time Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium shadow-sm"
+               style={{ 
+                 backgroundColor: 'var(--navy)',
+                 color: '#FFFFFF'
+               }}>
+            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="hidden sm:inline">
+              {totalQuestions - state.currentQuestionIndex <= 5 
+                ? "Take less then 2 minutes"
+                : "Takes less than 5 minutes"
+              }
+            </span>
+            <span className="sm:hidden">
+              &lt;2 min
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 z-40">
+      <div className="fixed left-0 right-0 z-40" style={{ top: '57px' }}>
         <div className="h-1 bg-black bg-opacity-20">
           <motion.div
             className="h-full"
@@ -363,9 +368,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
         )}
       </AnimatePresence>
 
-      {/* Milestone Celebration Toast */}
+      {/* Milestone Celebration Toast (only for longer forms) */}
       <AnimatePresence>
-        {showMilestoneToast && (
+        {enableMilestoneToasts && showMilestoneToast && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: -50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -384,8 +389,52 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
         )}
       </AnimatePresence>
 
+      {/* Step Tracker (compact for short forms) */}
+      <div
+        className="fixed left-1/2 -translate-x-1/2 z-40"
+        style={{ top: '70px', width: 'min(640px, 90vw)' }}
+      >
+        <div className="flex items-center justify-between px-4">
+          {Array.from({ length: totalQuestions || 0 }, (_, idx) => {
+            const isCompleted = idx < state.currentQuestionIndex;
+            const isCurrent = idx === state.currentQuestionIndex;
+            const baseSize = 28;
+            const size = isCurrent ? baseSize + 4 : baseSize;
+            const bg = isCompleted || isCurrent ? 'var(--navy)' : 'transparent';
+            const borderColor = 'var(--navy)';
+            const color = isCompleted || isCurrent ? '#FFFFFF' : 'var(--navy)';
+            return (
+              <div key={idx} className="flex-1 flex items-center">
+                <div
+                  aria-label={`Step ${idx + 1} of ${totalQuestions}`}
+                  role="img"
+                  style={{
+                    width: size,
+                    height: size,
+                    borderRadius: '9999px',
+                    backgroundColor: bg,
+                    border: `2px solid ${borderColor}`,
+                    color,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                  }}
+                >
+                  {idx + 1}
+                </div>
+                {idx < (totalQuestions - 1) && (
+                  <div className="mx-2 flex-1" style={{ height: 2, backgroundColor: 'var(--rule)' }} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Form Content */}
-      <div className="relative pt-12 pb-40 md:pb-48">
+      <div className="relative flex items-center justify-center min-h-screen pt-32 pb-40 md:pb-48">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentQuestion?.id || 'loading'}
@@ -393,6 +442,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
+            className="w-full max-w-2xl px-4"
           >
             {renderQuestion()}
           </motion.div>
@@ -400,8 +450,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
       </div>
 
       {/* Navigation Controls */}
-      <div className="fixed left-6 right-6 z-50 mobile-edge-padding" style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)' }}>
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
+      <div className="fixed left-1/2 -translate-x-1/2 z-50 mobile-edge-padding" style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)', width: 'min(640px, 100vw - 24px)' }}>
+        <div className="mx-auto flex items-center justify-between">
           {/* Back Button */}
           <button
             onClick={prevQuestion}
