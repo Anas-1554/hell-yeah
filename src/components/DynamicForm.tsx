@@ -224,10 +224,10 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
         <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
           {/* Logo */}
           <div className="fixed top-4 left-4 z-50">
-            <a href="https://zigzy.com" rel="noopener noreferrer">
+            <a href="https://www.newamericanfunding.com?utm_source=naf-hellyeah-form" rel="noopener noreferrer">
             <img 
-              src="/logo.png" 
-              alt="Zigzy" 
+              src="/naf-logo.svg" 
+              alt="Naf" 
               className="h-8 w-auto"
               style={{ maxHeight: '32px' }}
             />
@@ -299,10 +299,10 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
       {/* Logo */}
       <div className="fixed top-4 left-4 z-50">
-        <a href="https://zigzy.com" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.newamericanfunding.com?utm_source=naf-hellyeah-form" target="_blank" rel="noopener noreferrer">
           <img 
-            src="/logo.png" 
-            alt="Zigzy" 
+            src="/naf-logo.svg" 
+            alt="Naf" 
             className="h-8 w-auto"
             style={{ maxHeight: '32px' }}
           />
