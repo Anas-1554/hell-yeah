@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { FormQuestion, FormData, FormState, FormConfig } from '../types/form';
 
-const STORAGE_KEY = 'zigzy_form_progress';
+const STORAGE_KEY = 'naf_form_progress';
 
 // Helper functions for localStorage
 const saveProgress = (state: FormState) => {
@@ -49,6 +49,9 @@ const clearProgress = () => {
   }
 };
 
+// These helper functions are no longer needed since we're not sending data anywhere
+// but keeping them commented in case needed later
+/*
 // Helper function to clean question titles (remove tooltip markup)
 const cleanQuestionTitle = (title: string): string => {
   // Remove {{text[id:X]}} markup and replace with just the text
@@ -98,6 +101,7 @@ const formatAnswerValue = (question: FormQuestion, value: any): any => {
   // Return as-is for text, textarea, number, email, phone, date
   return value;
 };
+*/
 
 export const useFormState = (config: FormConfig) => {
   const [state, setState] = useState<FormState>(() => {
@@ -254,71 +258,18 @@ export const useFormState = (config: FormConfig) => {
     setState(prev => ({ ...prev, isSubmitting: true }));
     
     try {
-      // N8N webhook URL from environment variable
-      const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL || 'https://your-n8n-instance.com/webhook/form-submission';
-      
-      // Create complete form data with ALL questions
-      const formData: Record<string, any> = {};
-      
-      // Process each question in the config
-      config.questions.forEach(question => {
-        const questionKey = question.id;
-        const questionTitle = cleanQuestionTitle(question.title);
-        const answer = state.answers[question.id];
-        const formattedAnswer = formatAnswerValue(question, answer);
-        
-        formData[questionKey] = {
-          question: questionTitle,
-          type: question.type,
-          answer: formattedAnswer,
-          required: question.required || false,
-          answered: answer !== undefined && answer !== null && answer !== ''
-        };
-      });
-
-      // Prepare payload for N8N
-      const n8nPayload = {
-        formTitle: config.title,
-        submissionDate: new Date().toISOString(),
-        totalQuestions: config.questions.length,
-        answeredQuestions: Object.values(formData).filter(q => q.answered).length,
-        data: formData
-      };
-
-      // Send to N8N webhook
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(n8nPayload)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // Also send to custom endpoint if provided (for backward compatibility)
-      if (config.submitEndpoint) {
-        await fetch(config.submitEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(n8nPayload)
-        });
-      }
+      // Just log the form data instead of sending anywhere
+      console.log('Form submitted with answers:', state.answers);
       
       // Clear saved progress after successful submission
       clearProgress();
       
     } catch (error) {
       console.error('Form submission error:', error);
-      // You might want to show an error message to the user here
     } finally {
       setState(prev => ({ ...prev, isSubmitting: false, isCompleted: true }));
     }
-  }, [config.title, config.questions, config.submitEndpoint, state.answers]);
+  }, [state.answers]);
 
   // Get current question
   const getCurrentQuestion = useCallback(() => {

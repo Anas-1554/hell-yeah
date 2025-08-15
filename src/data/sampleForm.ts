@@ -38,6 +38,14 @@ export const sampleForm: FormConfig = {
         { value: 'tiktok', label: 'TikTok' },
       ],
     },
+    {
+      id: 'social_media_id',
+      type: 'text',
+      title: 'Social Media ID',
+      description: 'Enter your account url',
+      placeholder: '@newamericanfunding',
+      required: true,
+    },
     // 4. I agree — must check all three boxes
     {
       id: 'agreements',

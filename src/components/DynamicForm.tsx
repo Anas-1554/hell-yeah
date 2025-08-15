@@ -23,7 +23,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
   // Check if we should show progress notification immediately
   const shouldShowProgressNotification = (() => {
     try {
-      const saved = localStorage.getItem('zigzy_form_progress');
+      const saved = localStorage.getItem('naf_form_progress');
       if (saved) {
         const parsed = JSON.parse(saved);
         return parsed.currentQuestionIndex && parsed.currentQuestionIndex > 0;
