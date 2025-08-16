@@ -41,7 +41,7 @@ export const sampleForm: FormConfig = {
     {
       id: 'social_media_id',
       type: 'text',
-      title: 'Social Media ID',
+      title: 'Social Media @',
       description: 'Enter your account url',
       placeholder: '@newamericanfunding',
       required: true,

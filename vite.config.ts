@@ -12,6 +12,12 @@ export default defineConfig({
   server: {
     port: 4106,
     allowedHosts: ['onboarding.zigzy.com'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
   },
   resolve: {
     alias: {

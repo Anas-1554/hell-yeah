@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { FormQuestion, FormData, FormState, FormConfig } from '../types/form';
+import { formatFormDataForSubmission, validateFormDataForSubmission } from '../lib/dataFormatter';
+import type { SubmitFormResponse } from '../types/googleSheets';
 
 const STORAGE_KEY = 'naf_form_progress';
 
@@ -256,17 +258,194 @@ export const useFormState = (config: FormConfig) => {
   // Submit form
   const submitForm = useCallback(async () => {
     setState(prev => ({ ...prev, isSubmitting: true }));
+    const startTime = Date.now();
+    
+    // Generate a client-side submission ID for tracking
+    const submissionId = `client_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
     try {
-      // Just log the form data instead of sending anywhere
-      console.log('Form submitted with answers:', state.answers);
+      // Validate form data before submission
+      if (!validateFormDataForSubmission(state.answers)) {
+        console.error(JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'error',
+          message: 'Form validation failed',
+          submissionId,
+          operation: 'form_validation',
+          context: {
+            answers: state.answers,
+            suggestion: 'Check required fields and data format'
+          }
+        }));
+        setState(prev => ({ ...prev, isSubmitting: false }));
+        return;
+      }
+
+      // Format form data for API submission
+      const formPayload = formatFormDataForSubmission(state.answers);
       
-      // Clear saved progress after successful submission
-      clearProgress();
+      console.log(JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        message: 'Starting form submission',
+        submissionId,
+        operation: 'form_submission',
+        context: {
+          name: formPayload.name,
+          contactMethods: formPayload.contactMethods,
+          socialPlatforms: formPayload.socialPlatforms,
+          hasEmail: !!formPayload.email,
+          hasPhone: !!formPayload.phone
+        }
+      }));
+      
+      // Create AbortController for timeout handling
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      try {
+        // Send form data to API endpoint
+        const response = await fetch('/api/submit-form', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formPayload),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+        const duration = Date.now() - startTime;
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result: SubmitFormResponse = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error || 'Submission failed');
+        }
+
+        console.log(JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: 'Form submitted successfully',
+          submissionId,
+          operation: 'form_submission',
+          context: {
+            name: formPayload.name,
+            timestamp: formPayload.timestamp,
+            duration: `${duration}ms`,
+            responseMessage: result.message
+          }
+        }));
+
+        // Clear saved progress after successful submission
+        clearProgress();
+
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        const duration = Date.now() - startTime;
+        
+        // Log error for debugging but don't show to user (per requirements)
+        if (fetchError instanceof Error) {
+          if (fetchError.name === 'AbortError') {
+            console.error(JSON.stringify({
+              timestamp: new Date().toISOString(),
+              level: 'error',
+              message: 'Form submission timeout',
+              submissionId,
+              operation: 'form_submission',
+              error: {
+                name: fetchError.name,
+                message: 'Request timed out after 10 seconds'
+              },
+              context: {
+                duration: `${duration}ms`,
+                formData: formPayload,
+                suggestion: 'Check network connectivity and API performance'
+              }
+            }));
+          } else {
+            console.error(JSON.stringify({
+              timestamp: new Date().toISOString(),
+              level: 'error',
+              message: 'Form submission network error',
+              submissionId,
+              operation: 'form_submission',
+              error: {
+                name: fetchError.name,
+                message: fetchError.message,
+                stack: fetchError.stack
+              },
+              context: {
+                duration: `${duration}ms`,
+                formData: formPayload,
+                suggestion: 'Check network connectivity and API endpoint'
+              }
+            }));
+          }
+        } else {
+          console.error(JSON.stringify({
+            timestamp: new Date().toISOString(),
+            level: 'error',
+            message: 'Form submission unknown error',
+            submissionId,
+            operation: 'form_submission',
+            error: {
+              name: 'UnknownError',
+              message: String(fetchError)
+            },
+            context: {
+              duration: `${duration}ms`,
+              formData: formPayload,
+              suggestion: 'Check browser console for additional details'
+            }
+          }));
+        }
+
+        // Still clear progress and show success to maintain user experience
+        clearProgress();
+      }
       
     } catch (error) {
-      console.error('Form submission error:', error);
+      // Log validation or other errors
+      const duration = Date.now() - startTime;
+      const err = error instanceof Error ? error : new Error('Unknown error');
+      
+      console.error(JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'error',
+        message: 'Form submission error',
+        submissionId,
+        operation: 'form_submission',
+        error: {
+          name: err.name,
+          message: err.message,
+          stack: err.stack
+        },
+        context: {
+          duration: `${duration}ms`,
+          answers: state.answers,
+          suggestion: 'Check form validation and data formatting'
+        }
+      }));
     } finally {
+      // Always complete the form and show success message to user
+      const duration = Date.now() - startTime;
+      console.log(JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        message: 'Form submission completed',
+        submissionId,
+        operation: 'form_submission',
+        context: {
+          duration: `${duration}ms`,
+          userExperience: 'success_shown'
+        }
+      }));
+      
       setState(prev => ({ ...prev, isSubmitting: false, isCompleted: true }));
     }
   }, [state.answers]);

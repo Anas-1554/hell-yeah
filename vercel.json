@@ -1,0 +1,19 @@
+{
+  "functions": {
+    "pages/api/**/*.ts": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "builds": [
+    {
+      "src": "pages/api/**/*.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "env": {
+    "GOOGLE_SHEETS_PRIVATE_KEY": "@google-sheets-private-key",
+    "GOOGLE_SHEETS_CLIENT_EMAIL": "@google-sheets-client-email", 
+    "GOOGLE_SHEETS_SPREADSHEET_ID": "@google-sheets-spreadsheet-id",
+    "GOOGLE_SHEETS_SHEET_NAME": "@google-sheets-sheet-name"
+  }
+}

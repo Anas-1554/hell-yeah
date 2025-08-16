@@ -62,12 +62,12 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
     }
   }, [currentQuestion?.id]);
 
-  // Auto-hide progress notification after 4 seconds
+  // Auto-hide progress notification after 2.5 seconds
   useEffect(() => {
     if (showProgressNotification) {
       const timer = setTimeout(() => {
         setShowProgressNotification(false);
-      }, 4000);
+      }, 2500);
       return () => clearTimeout(timer);
     }
   }, [showProgressNotification]);
@@ -333,7 +333,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
 
       {/* Progress Bar */}
       <div className="fixed left-0 right-0 z-40" style={{ top: '57px' }}>
-        <div className="h-1 bg-black bg-opacity-20">
+        <div className="h-1 bg-gray-200">
           <motion.div
             className="h-full"
             style={{ backgroundColor: 'var(--navy)' }}
@@ -344,15 +344,15 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
         </div>
       </div>
 
-      {/* Progress Restoration Notification */}
+      {/* Progress Restoration Notification - Top Right */}
       <AnimatePresence>
         {showProgressNotification && (
           <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-16 left-1/2 transform -translate-x-1/2 z-40"
+            className="fixed top-4 right-4 z-50"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium"
                  style={{ 
@@ -389,49 +389,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
         )}
       </AnimatePresence>
 
-      {/* Step Tracker (compact for short forms) */}
-      <div
-        className="fixed left-1/2 -translate-x-1/2 z-40"
-        style={{ top: '70px', width: 'min(640px, 90vw)' }}
-      >
-        <div className="flex items-center justify-between px-4">
-          {Array.from({ length: totalQuestions || 0 }, (_, idx) => {
-            const isCompleted = idx < state.currentQuestionIndex;
-            const isCurrent = idx === state.currentQuestionIndex;
-            const baseSize = 28;
-            const size = isCurrent ? baseSize + 4 : baseSize;
-            const bg = isCompleted || isCurrent ? 'var(--navy)' : 'transparent';
-            const borderColor = 'var(--navy)';
-            const color = isCompleted || isCurrent ? '#FFFFFF' : 'var(--navy)';
-            return (
-              <div key={idx} className="flex-1 flex items-center">
-                <div
-                  aria-label={`Step ${idx + 1} of ${totalQuestions}`}
-                  role="img"
-                  style={{
-                    width: size,
-                    height: size,
-                    borderRadius: '9999px',
-                    backgroundColor: bg,
-                    border: `2px solid ${borderColor}`,
-                    color,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                  }}
-                >
-                  {idx + 1}
-                </div>
-                {idx < (totalQuestions - 1) && (
-                  <div className="mx-2 flex-1" style={{ height: 2, backgroundColor: 'var(--rule)' }} />
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+
 
       {/* Form Content */}
       <div className="relative flex items-center justify-center min-h-screen pt-32 pb-40 md:pb-48">

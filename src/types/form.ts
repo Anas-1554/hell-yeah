@@ -27,7 +27,7 @@ export interface FormQuestion {
 }
 
 export interface FormData {
-  [questionId: string]: string | string[] | number | boolean;
+  [questionId: string]: string | string[] | number | boolean | { methods?: string[], email?: string, phone?: string };
 }
 
 export interface FormState {
