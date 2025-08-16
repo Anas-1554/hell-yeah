@@ -4,12 +4,6 @@
       "runtime": "nodejs20.x"
     }
   },
-  "builds": [
-    {
-      "src": "pages/api/**/*.ts",
-      "use": "@vercel/node"
-    }
-  ],
   "env": {
     "GOOGLE_SHEETS_PRIVATE_KEY": "@google-sheets-private-key",
     "GOOGLE_SHEETS_CLIENT_EMAIL": "@google-sheets-client-email", 
