@@ -97,15 +97,18 @@ async function appendToGoogleSheets(formData: FormSubmissionPayload): Promise<bo
       formData.socialMediaHandle
     ]];
 
-    // Append data to spreadsheet
-    const response = await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.GOOGLE_SHEETS_SPREADSHEET_ID,
+    // Append data to spreadsheet using the correct API structure
+    const request = {
+      spreadsheetId: process.env.GOOGLE_SHEETS_SPREADSHEET_ID!,
       range: `${process.env.GOOGLE_SHEETS_SHEET_NAME || 'Sheet1'}!A:G`,
-      valueInputOption: 'RAW',
-      insertDataOption: 'INSERT_ROWS',
-      resource: { values }
-    });
+      valueInputOption: 'RAW' as const,
+      insertDataOption: 'INSERT_ROWS' as const,
+      requestBody: {
+        values
+      }
+    };
 
+    const response = await sheets.spreadsheets.values.append(request);
     return response.status === 200;
   } catch (error) {
     console.error('Google Sheets error:', error);
@@ -152,8 +155,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Sanitize the form data
     const sanitizedData = sanitizeFormData(req.body);
-    
-    console.log('Processing form submission:', { 
+
+    console.log('Processing form submission:', {
       name: sanitizedData.name,
       contactMethods: sanitizedData.contactMethods,
       socialPlatforms: sanitizedData.socialPlatforms,
