@@ -32,7 +32,8 @@ describe('/api/submit-form', () => {
     email: 'john@example.com',
     phone: '(555) 123-4567',
     socialPlatforms: ['instagram', 'tiktok'],
-    socialMediaHandle: '@johndoe'
+    socialMediaHandle: '@johndoe',
+    address: '123 Main St, Anytown, NY 12345'
   };
 
   describe('Request Method Validation', () => {
@@ -179,6 +180,47 @@ describe('/api/submit-form', () => {
         message: 'Form submitted successfully'
       });
     });
+
+    it('should accept valid form data with optional address field', async () => {
+      const dataWithAddress = {
+        timestamp: '2024-01-15T10:30:00.000Z',
+        name: 'John Doe',
+        contactMethods: ['email'],
+        email: 'john@example.com',
+        socialPlatforms: ['instagram'],
+        socialMediaHandle: '@johndoe',
+        address: '456 Oak Ave, Somewhere, CA 90210'
+      };
+
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse<SubmitFormResponse>>({
+        method: 'POST',
+        body: dataWithAddress
+      });
+
+      await handler(req, res);
+
+      expect(res._getStatusCode()).toBe(200);
+      expect(JSON.parse(res._getData())).toEqual({
+        success: true,
+        message: 'Form submitted successfully'
+      });
+    });
+
+    it('should reject form data with empty address string', async () => {
+      const invalidData = { ...validFormData, address: '   ' };
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse<SubmitFormResponse>>({
+        method: 'POST',
+        body: invalidData
+      });
+
+      await handler(req, res);
+
+      expect(res._getStatusCode()).toBe(400);
+      expect(JSON.parse(res._getData())).toEqual({
+        success: false,
+        message: 'Invalid form data'
+      });
+    });
   });
 
   describe('Data Sanitization', () => {
@@ -197,7 +239,8 @@ describe('/api/submit-form', () => {
         email: 'test@example.com', // Valid email without extra spaces for this test
         phone: '(555) 123-4567',
         socialPlatforms: ['instagram', 'tiktok'],
-        socialMediaHandle: '  @' + 'b'.repeat(150) + '  '
+        socialMediaHandle: '  @' + 'b'.repeat(150) + '  ',
+        address: '  ' + 'c'.repeat(600) + '  ' // Long address with spaces
       };
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse<SubmitFormResponse>>({
@@ -217,6 +260,7 @@ describe('/api/submit-form', () => {
       expect(callArgs.name).toBe('a'.repeat(100)); // Trimmed and limited to 100 chars
       expect(callArgs.email).toBe('test@example.com'); // Should remain the same
       expect(callArgs.socialMediaHandle).toBe('@' + 'b'.repeat(99)); // Trimmed and limited to 100 chars total
+      expect(callArgs.address).toBe('c'.repeat(500)); // Trimmed and limited to 500 chars
     });
 
 
@@ -246,6 +290,7 @@ describe('/api/submit-form', () => {
           phone: validFormData.phone,
           socialPlatforms: validFormData.socialPlatforms,
           socialMediaHandle: validFormData.socialMediaHandle,
+          address: validFormData.address,
           timestamp: expect.any(String)
         })
       );

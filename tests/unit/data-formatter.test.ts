@@ -30,7 +30,8 @@ describe('Data Formatter Unit Tests', () => {
         email: 'john@example.com',
         phone: '(555) 123-4567',
         socialPlatforms: ['instagram', 'tiktok'],
-        socialMediaHandle: '@johndoe'
+        socialMediaHandle: '@johndoe',
+        address: undefined
       });
 
       // Verify timestamp is a valid ISO string
@@ -57,7 +58,8 @@ describe('Data Formatter Unit Tests', () => {
         email: 'jane@example.com',
         phone: undefined,
         socialPlatforms: ['youtube'],
-        socialMediaHandle: '@janesmith'
+        socialMediaHandle: '@janesmith',
+        address: undefined
       });
     });
 
@@ -81,7 +83,8 @@ describe('Data Formatter Unit Tests', () => {
         email: undefined,
         phone: '555-987-6543',
         socialPlatforms: ['linkedin'],
-        socialMediaHandle: '@mikejohnson'
+        socialMediaHandle: '@mikejohnson',
+        address: undefined
       });
     });
 
@@ -409,7 +412,8 @@ describe('Data Formatter Unit Tests', () => {
         email: 'john@example.com',
         phone: '(555) 123-4567',
         socialPlatforms: 'instagram, tiktok',
-        socialMediaHandle: '@johndoe'
+        socialMediaHandle: '@johndoe',
+        address: ''
       });
 
       // Verify timestamp is formatted as locale string
@@ -435,7 +439,8 @@ describe('Data Formatter Unit Tests', () => {
         email: 'jane@example.com',
         phone: '',
         socialPlatforms: 'youtube',
-        socialMediaHandle: '@janesmith'
+        socialMediaHandle: '@janesmith',
+        address: ''
       });
     });
 
@@ -458,7 +463,8 @@ describe('Data Formatter Unit Tests', () => {
         email: '',
         phone: '555-987-6543',
         socialPlatforms: 'linkedin',
-        socialMediaHandle: '@mikejohnson'
+        socialMediaHandle: '@mikejohnson',
+        address: ''
       });
     });
 

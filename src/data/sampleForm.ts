@@ -46,7 +46,16 @@ export const sampleForm: FormConfig = {
       placeholder: '@newamericanfunding',
       required: true,
     },
-    // 4. I agree — must check all three boxes
+    // 4. Address for check delivery
+    {
+      id: 'address',
+      type: 'textarea',
+      title: 'Mailing Address',
+      description: 'We need this address so New American Funding can send check to winner of the contest',
+      placeholder: 'Enter your full mailing address including street, city, state, and ZIP code',
+      required: true,
+    },
+    // 5. I agree — must check all three boxes
     {
       id: 'agreements',
       type: 'checkbox',

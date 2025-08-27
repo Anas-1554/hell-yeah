@@ -8,6 +8,7 @@ export interface FormSubmissionPayload {
   phone?: string;
   socialPlatforms: string[];
   socialMediaHandle: string;
+  address?: string;
 }
 
 export interface SubmitFormRequest {
@@ -47,4 +48,5 @@ export interface SpreadsheetRowData {
   phone: string;
   socialPlatforms: string;
   socialMediaHandle: string;
+  address: string;
 }

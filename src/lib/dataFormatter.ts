@@ -23,6 +23,9 @@ export function formatFormDataForSubmission(answers: FormData): FormSubmissionPa
   // Extract social media handle
   const socialMediaHandle = String(answers.social_media_id || '').trim();
   
+  // Extract address (optional)
+  const address = String(answers.address || '').trim() || undefined;
+  
   return {
     timestamp: new Date().toISOString(),
     name,
@@ -30,7 +33,8 @@ export function formatFormDataForSubmission(answers: FormData): FormSubmissionPa
     email,
     phone,
     socialPlatforms,
-    socialMediaHandle
+    socialMediaHandle,
+    address
   };
 }
 
@@ -104,6 +108,7 @@ export function convertToSpreadsheetRow(data: FormSubmissionPayload): import('..
     email: data.email || '',
     phone: data.phone || '',
     socialPlatforms: data.socialPlatforms.join(', '),
-    socialMediaHandle: data.socialMediaHandle
+    socialMediaHandle: data.socialMediaHandle,
+    address: data.address || ''
   };
 }

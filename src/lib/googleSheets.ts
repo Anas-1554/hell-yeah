@@ -149,14 +149,15 @@ export class GoogleSheetsServiceImpl implements GoogleSheetsService {
             rowData.email,
             rowData.phone,
             rowData.socialPlatforms,
-            rowData.socialMediaHandle
+            rowData.socialMediaHandle,
+            rowData.address
           ]
         ];
 
         // Append data to spreadsheet
         const response = await this.sheets.spreadsheets.values.append({
           spreadsheetId: this.config.spreadsheetId,
-          range: `${this.config.sheetName}!A:G`, // Columns A through G
+          range: `${this.config.sheetName}!A:H`, // Columns A through H (added address column)
           valueInputOption: 'RAW',
           insertDataOption: 'INSERT_ROWS',
           resource: {

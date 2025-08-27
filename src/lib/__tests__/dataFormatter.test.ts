@@ -14,6 +14,7 @@ describe('dataFormatter', () => {
         },
         platform: ['instagram', 'tiktok'],
         social_media_id: '@johndoe',
+        address: '123 Main St, Anytown, NY 12345',
       };
 
       const result = formatFormDataForSubmission(formData);
@@ -26,6 +27,7 @@ describe('dataFormatter', () => {
         phone: '(555) 123-4567',
         socialPlatforms: ['instagram', 'tiktok'],
         socialMediaHandle: '@johndoe',
+        address: '123 Main St, Anytown, NY 12345',
       });
 
       // Verify timestamp is a valid ISO string
@@ -53,6 +55,7 @@ describe('dataFormatter', () => {
         phone: undefined,
         socialPlatforms: ['instagram'],
         socialMediaHandle: '@janesmith',
+        address: undefined,
       });
     });
 
@@ -77,6 +80,7 @@ describe('dataFormatter', () => {
         phone: '555-987-6543',
         socialPlatforms: ['tiktok'],
         socialMediaHandle: '@bobjohnson',
+        address: undefined,
       });
     });
 
@@ -110,6 +114,7 @@ describe('dataFormatter', () => {
         phone: undefined,
         socialPlatforms: [],
         socialMediaHandle: '',
+        address: undefined,
       });
     });
 
@@ -405,6 +410,7 @@ describe('dataFormatter', () => {
         phone: '(555) 123-4567',
         socialPlatforms: ['instagram', 'tiktok'],
         socialMediaHandle: '@johndoe',
+        address: '123 Main St, Anytown, NY 12345',
       };
 
       const result = convertToSpreadsheetRow(payload);
@@ -417,6 +423,7 @@ describe('dataFormatter', () => {
         phone: '(555) 123-4567',
         socialPlatforms: 'instagram, tiktok',
         socialMediaHandle: '@johndoe',
+        address: '123 Main St, Anytown, NY 12345',
       });
 
       // Verify timestamp is formatted as locale string
@@ -442,6 +449,7 @@ describe('dataFormatter', () => {
         phone: '',
         socialPlatforms: 'instagram',
         socialMediaHandle: '@janesmith',
+        address: '',
       });
     });
 
@@ -464,6 +472,7 @@ describe('dataFormatter', () => {
         phone: '',
         socialPlatforms: '',
         socialMediaHandle: '@testuser',
+        address: '',
       });
     });
   });

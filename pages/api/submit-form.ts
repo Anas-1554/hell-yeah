@@ -40,6 +40,11 @@ function validateFormData(data: any): data is FormSubmissionPayload {
     return false;
   }
 
+  // Optional address validation (if present)
+  if (data.address && (typeof data.address !== 'string' || data.address.trim().length === 0)) {
+    return false;
+  }
+
   return true;
 }
 
@@ -66,7 +71,8 @@ function sanitizeFormData(data: FormSubmissionPayload): FormSubmissionPayload {
     email: data.email?.trim().substring(0, 100),
     phone: data.phone?.trim().substring(0, 20),
     socialPlatforms: data.socialPlatforms.map(platform => platform.trim().substring(0, 50)),
-    socialMediaHandle: data.socialMediaHandle.trim().substring(0, 100)
+    socialMediaHandle: data.socialMediaHandle.trim().substring(0, 100),
+    address: data.address?.trim().substring(0, 500) // Allow longer address
   };
 }
 
@@ -126,7 +132,8 @@ export default async function handler(
       contactMethods: sanitizedData.contactMethods,
       socialPlatforms: sanitizedData.socialPlatforms,
       hasEmail: !!sanitizedData.email,
-      hasPhone: !!sanitizedData.phone
+      hasPhone: !!sanitizedData.phone,
+      hasAddress: !!sanitizedData.address
     }, 'form_processing', submissionId);
 
     // Initialize Google Sheets service with error handling

@@ -22,7 +22,8 @@ vi.mock('../dataFormatter', () => ({
     email: data.email || '',
     phone: data.phone || '',
     socialPlatforms: data.socialPlatforms.join(', '),
-    socialMediaHandle: data.socialMediaHandle
+    socialMediaHandle: data.socialMediaHandle,
+    address: data.address || ''
   }))
 }));
 
@@ -145,15 +146,16 @@ describe('GoogleSheetsService', () => {
   });
 
   describe('appendFormData', () => {
-    const testFormData: FormSubmissionPayload = {
-      timestamp: '2024-01-15T14:30:25.000Z',
-      name: 'John Doe',
-      contactMethods: ['Email', 'Phone'],
-      email: 'john@example.com',
-      phone: '(555) 123-4567',
-      socialPlatforms: ['Instagram', 'TikTok'],
-      socialMediaHandle: '@johndoe'
-    };
+      const testFormData: FormSubmissionPayload = {
+    timestamp: '2024-01-15T14:30:25.000Z',
+    name: 'John Doe',
+    contactMethods: ['Email', 'Phone'],
+    email: 'john@example.com',
+    phone: '(555) 123-4567',
+    socialPlatforms: ['Instagram', 'TikTok'],
+    socialMediaHandle: '@johndoe',
+    address: '123 Main St, Anytown, NY 12345'
+  };
 
     it('should successfully append form data to spreadsheet', async () => {
       mockSheetsApi.spreadsheets.values.append.mockResolvedValue({
@@ -166,7 +168,7 @@ describe('GoogleSheetsService', () => {
 
       expect(mockSheetsApi.spreadsheets.values.append).toHaveBeenCalledWith({
         spreadsheetId: 'test-spreadsheet-id',
-        range: 'TestSheet!A:G',
+        range: 'TestSheet!A:H',
         valueInputOption: 'RAW',
         insertDataOption: 'INSERT_ROWS',
         resource: {
