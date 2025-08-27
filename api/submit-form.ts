@@ -9,6 +9,7 @@ interface FormSubmissionPayload {
   phone?: string;
   socialPlatforms: string[];
   socialMediaHandle: string;
+  address?: string;
 }
 
 /**
@@ -45,6 +46,10 @@ function validateFormData(data: any): data is FormSubmissionPayload {
     return false;
   }
 
+  if (data.address && (typeof data.address !== 'string' || data.address.trim().length === 0)) {
+    return false;
+  }
+
   return true;
 }
 
@@ -67,7 +72,8 @@ function sanitizeFormData(data: FormSubmissionPayload): FormSubmissionPayload {
     email: data.email?.trim().substring(0, 100),
     phone: data.phone?.trim().substring(0, 20),
     socialPlatforms: data.socialPlatforms.map(platform => platform.trim().substring(0, 50)),
-    socialMediaHandle: data.socialMediaHandle.trim().substring(0, 100)
+    socialMediaHandle: data.socialMediaHandle.trim().substring(0, 100),
+    address: data.address?.trim().substring(0, 200)
   };
 }
 
