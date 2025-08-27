@@ -38,9 +38,7 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
         if (isOpen && turnstileRef.current && window.turnstile && !widgetId) {
             setIsLoading(true);
 
-            // Try test key first to debug the issue
-            const siteKey = '1x00000000000000000000AA'; // Cloudflare test key that always passes
-            // const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+            const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
             console.log('🔑 Turnstile Site Key:', siteKey ? `${siteKey.substring(0, 15)}...` : 'NOT SET');
             console.log('🌐 Current domain:', window.location.hostname);
             console.log('📦 Turnstile loaded:', !!window.turnstile);

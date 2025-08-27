@@ -165,11 +165,22 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
   };
 
   const submitFormWithTurnstile = async (turnstileToken: string) => {
+    // Transform form data to match API expectations
+    const contactInfo = state.answers.contact_info as { methods?: string[]; email?: string; phone?: string; } | undefined;
+
     const formData = {
-      ...state.answers,
+      name: state.answers.name as string,
+      contactMethods: contactInfo?.methods || [],
+      email: contactInfo?.email || '',
+      phone: contactInfo?.phone || '',
+      socialPlatforms: state.answers.platform as string[] || [],
+      socialMediaHandle: state.answers.social_media_id as string || '',
+      address: state.answers.address as string || '',
       timestamp: new Date().toISOString(),
       turnstileToken
     };
+
+    console.log('📤 Sending form data:', formData);
 
     const response = await fetch('/api/submit-form', {
       method: 'POST',
@@ -180,6 +191,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ API Error:', response.status, errorText);
       throw new Error('Form submission failed');
     }
 
