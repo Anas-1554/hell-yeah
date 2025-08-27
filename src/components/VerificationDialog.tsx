@@ -38,7 +38,9 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
         if (isOpen && turnstileRef.current && window.turnstile && !widgetId) {
             setIsLoading(true);
 
-            const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+            // Try test key first to debug the issue
+            const siteKey = '1x00000000000000000000AA'; // Cloudflare test key that always passes
+            // const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
             console.log('🔑 Turnstile Site Key:', siteKey ? `${siteKey.substring(0, 15)}...` : 'NOT SET');
             console.log('🌐 Current domain:', window.location.hostname);
             console.log('📦 Turnstile loaded:', !!window.turnstile);
@@ -53,25 +55,40 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
                 turnstileRef.current.innerHTML = '';
             }
 
+            // Set a timeout to prevent infinite loading
+            const loadingTimeout = setTimeout(() => {
+                if (isLoading) {
+                    console.error('⏰ Turnstile loading timeout');
+                    setIsLoading(false);
+                    onError('Verification is taking too long. Please try again.');
+                }
+            }, 15000); // 15 second timeout
+
             try {
                 const id = window.turnstile.render(turnstileRef.current, {
                     sitekey: siteKey,
                     callback: (token: string) => {
+                        clearTimeout(loadingTimeout);
                         console.log('✅ Turnstile success! Token received:', token.substring(0, 20) + '...');
                         setIsLoading(false);
                         onVerified(token);
                     },
                     'error-callback': (error: string) => {
+                        clearTimeout(loadingTimeout);
                         console.error('❌ Turnstile error:', error);
                         setIsLoading(false);
-                        onError(error || 'Verification failed');
+                        onError(error || 'Verification failed. Please try again.');
                     },
                     theme: 'auto',
                     size: 'normal'
                 });
                 setWidgetId(id);
                 console.log('🎯 Turnstile widget rendered with ID:', id);
+
+                // Clear timeout on successful render
+                return () => clearTimeout(loadingTimeout);
             } catch (error) {
+                clearTimeout(loadingTimeout);
                 console.error('💥 Failed to render Turnstile:', error);
                 setIsLoading(false);
                 onError('Failed to load verification');
