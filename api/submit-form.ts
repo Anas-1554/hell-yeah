@@ -94,13 +94,14 @@ async function appendToGoogleSheets(formData: FormSubmissionPayload): Promise<bo
       formData.email || '',
       formData.phone || '',
       formData.socialPlatforms.join(', '),
-      formData.socialMediaHandle
+      formData.socialMediaHandle,
+      formData.address || ''
     ]];
 
     // Append data to spreadsheet using the correct API structure
     const request = {
       spreadsheetId: process.env.GOOGLE_SHEETS_SPREADSHEET_ID!,
-      range: `${process.env.GOOGLE_SHEETS_SHEET_NAME || 'Sheet1'}!A:G`,
+      range: `${process.env.GOOGLE_SHEETS_SHEET_NAME || 'Sheet1'}!A:H`,
       valueInputOption: 'RAW' as const,
       insertDataOption: 'INSERT_ROWS' as const,
       requestBody: {

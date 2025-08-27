@@ -34,13 +34,14 @@ async function appendToGoogleSheets(formData) {
       formData.email || '',
       formData.phone || '',
       formData.socialPlatforms.join(', '),
-      formData.socialMediaHandle
+      formData.socialMediaHandle,
+      formData.address || ''
     ]];
 
     // Append data to spreadsheet
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEETS_SPREADSHEET_ID,
-      range: `${process.env.GOOGLE_SHEETS_SHEET_NAME || 'Sheet1'}!A:G`,
+      range: `${process.env.GOOGLE_SHEETS_SHEET_NAME || 'Sheet1'}!A:H`,
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       resource: { values }
@@ -77,7 +78,8 @@ app.post('/api/submit-form', async (req, res) => {
       email: req.body.email || '',
       phone: req.body.phone || '',
       socialPlatforms: req.body.socialPlatforms || [],
-      socialMediaHandle: req.body.socialMediaHandle
+      socialMediaHandle: req.body.socialMediaHandle,
+      address: req.body.address || ''
     };
 
     // Try to use Google Sheets if configured
