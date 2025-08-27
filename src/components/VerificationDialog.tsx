@@ -35,7 +35,7 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (isOpen && turnstileRef.current && window.turnstile) {
+        if (isOpen && turnstileRef.current && window.turnstile && !widgetId) {
             setIsLoading(true);
 
             const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
@@ -48,14 +48,21 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
                 return;
             }
 
+            // Clear any existing content in the container
+            if (turnstileRef.current) {
+                turnstileRef.current.innerHTML = '';
+            }
+
             try {
                 const id = window.turnstile.render(turnstileRef.current, {
                     sitekey: siteKey,
                     callback: (token: string) => {
+                        console.log('✅ Turnstile success! Token received:', token.substring(0, 20) + '...');
                         setIsLoading(false);
                         onVerified(token);
                     },
                     'error-callback': (error: string) => {
+                        console.error('❌ Turnstile error:', error);
                         setIsLoading(false);
                         onError(error || 'Verification failed');
                     },
@@ -63,7 +70,9 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
                     size: 'normal'
                 });
                 setWidgetId(id);
+                console.log('🎯 Turnstile widget rendered with ID:', id);
             } catch (error) {
+                console.error('💥 Failed to render Turnstile:', error);
                 setIsLoading(false);
                 onError('Failed to load verification');
             }
@@ -72,13 +81,15 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
         return () => {
             if (widgetId && window.turnstile) {
                 try {
+                    console.log('🧹 Cleaning up Turnstile widget:', widgetId);
                     window.turnstile.remove(widgetId);
+                    setWidgetId(null);
                 } catch (error) {
                     console.warn('Failed to remove Turnstile widget:', error);
                 }
             }
         };
-    }, [isOpen, onVerified, onError]);
+    }, [isOpen, widgetId]);
 
     if (!isOpen) return null;
 
