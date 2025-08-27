@@ -39,6 +39,10 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
             setIsLoading(true);
 
             const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+            console.log('🔑 Turnstile Site Key:', siteKey ? `${siteKey.substring(0, 15)}...` : 'NOT SET');
+            console.log('🌐 Current domain:', window.location.hostname);
+            console.log('📦 Turnstile loaded:', !!window.turnstile);
+
             if (!siteKey) {
                 onError('Turnstile site key not configured');
                 return;
