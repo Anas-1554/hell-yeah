@@ -21,8 +21,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
   const [milestoneMessage, setMilestoneMessage] = useState('');
   const [celebratedMilestones, setCelebratedMilestones] = useState<Set<number>>(new Set());
   const [showVerificationDialog, setShowVerificationDialog] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Check if we should show progress notification immediately
   const shouldShowProgressNotification = (() => {
     try {
@@ -36,15 +35,14 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
     }
     return false;
   })();
-  
+
   const [showProgressNotification, setShowProgressNotification] = useState(shouldShowProgressNotification);
-  
+
   const {
     state,
     setAnswer,
     nextQuestion,
     prevQuestion,
-    submitForm,
     getCurrentQuestion,
     getProgress,
     canGoNext,
@@ -59,8 +57,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
   // Notify when question changes to hide any active tooltips
   useEffect(() => {
     if (currentQuestion) {
-      window.dispatchEvent(new CustomEvent('questionChanged', { 
-        detail: { questionId: currentQuestion.id } 
+      window.dispatchEvent(new CustomEvent('questionChanged', {
+        detail: { questionId: currentQuestion.id }
       }));
     }
   }, [currentQuestion?.id]);
@@ -148,8 +146,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
 
   const handleVerificationSuccess = async (turnstileToken: string) => {
     setShowVerificationDialog(false);
-    setIsSubmitting(true);
-    
+
     try {
       // Submit form with turnstile token
       await submitFormWithTurnstile(turnstileToken);
@@ -158,8 +155,6 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
     } catch (error) {
       console.error('Form submission failed:', error);
       // You could show an error message here
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -266,17 +261,17 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
     return (
       <>
         <PartyParticles count={60} duration={4000} />
-        
+
         <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
           {/* Logo */}
           <div className="fixed top-4 left-4 z-50">
             <a href="https://www.newamericanfunding.com?utm_source=naf-hellyeah-form" rel="noopener noreferrer">
-            <img 
-              src="/naf-logo.svg" 
-              alt="Naf" 
-              className="h-8 w-auto"
-              style={{ maxHeight: '32px' }}
-            />
+              <img
+                src="/naf-logo.svg"
+                alt="Naf"
+                className="h-8 w-auto"
+                style={{ maxHeight: '32px' }}
+              />
             </a>
           </div>
 
@@ -299,7 +294,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </motion.div>
-              
+
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -309,7 +304,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
               >
                 🎉 Awesome!
               </motion.h1>
-              
+
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -342,183 +337,185 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
-      {/* Top Header Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
-        <div className="flex items-center justify-between px-4 py-3">
-          {/* Logo */}
-          <a href="https://www.newamericanfunding.com?utm_source=naf-hellyeah-form" target="_blank" rel="noopener noreferrer">
-            <img 
-              src="/naf-logo.svg" 
-              alt="Naf" 
-              className="h-48 sm:h-48 w-auto"
-              style={{ maxHeight: '32px' }}
-            />
-          </a>
-          
-          {/* Time Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium shadow-sm"
-               style={{ 
-                 backgroundColor: 'var(--navy)',
-                 color: '#FFFFFF'
-               }}>
-            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="hidden sm:inline">
-              {totalQuestions - state.currentQuestionIndex <= 5 
-                ? "Take less then 2 minutes"
-                : "Takes less than 5 minutes"
-              }
-            </span>
-            <span className="sm:hidden">
-              &lt;2 min
-            </span>
-          </div>
-        </div>
-      </div>
+    <>
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
+        {/* Top Header Bar */}
+        <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
+          <div className="flex items-center justify-between px-4 py-3">
+            {/* Logo */}
+            <a href="https://www.newamericanfunding.com?utm_source=naf-hellyeah-form" target="_blank" rel="noopener noreferrer">
+              <img
+                src="/naf-logo.svg"
+                alt="Naf"
+                className="h-48 sm:h-48 w-auto"
+                style={{ maxHeight: '32px' }}
+              />
+            </a>
 
-      {/* Progress Bar */}
-      <div className="fixed left-0 right-0 z-40" style={{ top: '57px' }}>
-        <div className="h-1 bg-gray-200">
-          <motion.div
-            className="h-full"
-            style={{ backgroundColor: 'var(--navy)' }}
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-      </div>
-
-      {/* Progress Restoration Notification - Top Right */}
-      <AnimatePresence>
-        {showProgressNotification && (
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 50 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-4 right-4 z-50"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium"
-                 style={{ 
-                   backgroundColor: 'var(--navy)',
-                   color: 'var(--accent)'
-                 }}>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            {/* Time Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium shadow-sm"
+              style={{
+                backgroundColor: 'var(--navy)',
+                color: '#FFFFFF'
+              }}>
+              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Welcome back! Your progress has been restored.
+              <span className="hidden sm:inline">
+                {totalQuestions - state.currentQuestionIndex <= 5
+                  ? "Take less then 2 minutes"
+                  : "Takes less than 5 minutes"
+                }
+              </span>
+              <span className="sm:hidden">
+                &lt;2 min
+              </span>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Milestone Celebration Toast (only for longer forms) */}
-      <AnimatePresence>
-        {enableMilestoneToasts && showMilestoneToast && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: -50 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: -50 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50"
-          >
-            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-lg shadow-xl text-base font-bold"
-                 style={{ 
-                   backgroundColor: 'var(--navy)',
-                   color: '#FFFFFF'
-                 }}>
-              {milestoneMessage}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-
-
-      {/* Form Content */}
-      <div className="relative flex items-center justify-center min-h-screen pt-32 pb-40 md:pb-48">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQuestion?.id || 'loading'}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-2xl px-4"
-          >
-            {renderQuestion()}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Navigation Controls */}
-      <div className="fixed left-1/2 -translate-x-1/2 z-50 mobile-edge-padding" style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)', width: 'min(640px, 100vw - 24px)' }}>
-        <div className="mx-auto flex items-center justify-between">
-          {/* Back Button */}
-          <button
-            onClick={prevQuestion}
-            disabled={!canGoPrev}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black bg-white text-black hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            style={{ fontSize: '16px', minHeight: '44px' }}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back
-          </button>
-
-          {/* Progress Indicator */}
-          <div className="flex items-center gap-2 text-sm font-medium text-black">
-            <span className="font-bold">{state.currentQuestionIndex + 1}</span>
-            <span>/</span>
-            <span>{totalQuestions}</span>
           </div>
+        </div>
 
-          {/* Next/Submit Button */}
-          <button
-            onClick={handleNext}
-            disabled={!canGoNext}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            style={{ 
-              backgroundColor: 'var(--navy)',
-              color: '#FFFFFF',
-              fontSize: '16px', 
-              minHeight: '44px'
-            }}
-          >
-            {state.currentQuestionIndex >= totalQuestions - 1 ? (
-              <>
-                {state.isSubmitting ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
-                {state.isSubmitting ? 'Submitting...' : 'Submit'}
-              </>
-            ) : (
-              <>
-                Next
+        {/* Progress Bar */}
+        <div className="fixed left-0 right-0 z-40" style={{ top: '57px' }}>
+          <div className="h-1 bg-gray-200">
+            <motion.div
+              className="h-full"
+              style={{ backgroundColor: 'var(--navy)' }}
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.3 }}
+            />
+          </div>
+        </div>
+
+        {/* Progress Restoration Notification - Top Right */}
+        <AnimatePresence>
+          {showProgressNotification && (
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.3 }}
+              className="fixed top-4 right-4 z-50"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium"
+                style={{
+                  backgroundColor: 'var(--navy)',
+                  color: 'var(--accent)'
+                }}>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-              </>
-            )}
-          </button>
+                Welcome back! Your progress has been restored.
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Milestone Celebration Toast (only for longer forms) */}
+        <AnimatePresence>
+          {enableMilestoneToasts && showMilestoneToast && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: -50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: -50 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50"
+            >
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-lg shadow-xl text-base font-bold"
+                style={{
+                  backgroundColor: 'var(--navy)',
+                  color: '#FFFFFF'
+                }}>
+                {milestoneMessage}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+
+
+        {/* Form Content */}
+        <div className="relative flex items-center justify-center min-h-screen pt-32 pb-40 md:pb-48">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentQuestion?.id || 'loading'}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="w-full max-w-2xl px-4"
+            >
+              {renderQuestion()}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Navigation Controls */}
+        <div className="fixed left-1/2 -translate-x-1/2 z-50 mobile-edge-padding" style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 24px)', width: 'min(640px, 100vw - 24px)' }}>
+          <div className="mx-auto flex items-center justify-between">
+            {/* Back Button */}
+            <button
+              onClick={prevQuestion}
+              disabled={!canGoPrev}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black bg-white text-black hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              style={{ fontSize: '16px', minHeight: '44px' }}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back
+            </button>
+
+            {/* Progress Indicator */}
+            <div className="flex items-center gap-2 text-sm font-medium text-black">
+              <span className="font-bold">{state.currentQuestionIndex + 1}</span>
+              <span>/</span>
+              <span>{totalQuestions}</span>
+            </div>
+
+            {/* Next/Submit Button */}
+            <button
+              onClick={handleNext}
+              disabled={!canGoNext}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              style={{
+                backgroundColor: 'var(--navy)',
+                color: '#FFFFFF',
+                fontSize: '16px',
+                minHeight: '44px'
+              }}
+            >
+              {state.currentQuestionIndex >= totalQuestions - 1 ? (
+                <>
+                  {state.isSubmitting ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                  {state.isSubmitting ? 'Submitting...' : 'Submit'}
+                </>
+              ) : (
+                <>
+                  Next
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    {/* Verification Dialog */}
-    <VerificationDialog
-      isOpen={showVerificationDialog}
-      onClose={() => setShowVerificationDialog(false)}
-      onVerified={handleVerificationSuccess}
-      onError={handleVerificationError}
-    />
+      {/* Verification Dialog */}
+      <VerificationDialog
+        isOpen={showVerificationDialog}
+        onClose={() => setShowVerificationDialog(false)}
+        onVerified={handleVerificationSuccess}
+        onError={handleVerificationError}
+      />
+    </>
   );
 }; 
