@@ -89,6 +89,9 @@ export default async function handler(
   const submissionId = logger.generateSubmissionId();
   const startTime = Date.now();
 
+  // Debug log to verify address field is being received
+  console.log('🔍 Form data received:', { ...req.body, addressReceived: !!req.body?.address });
+
   // Log incoming request
   logger.info('API request received', {
     method: req.method,
