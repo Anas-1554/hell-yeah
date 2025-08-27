@@ -114,7 +114,10 @@ export default async function handler(
 
   try {
     // Validate request body
+    console.log('🔍 Validation check - Address in req.body:', req.body?.address);
+    
     if (!validateFormData(req.body)) {
+      console.log('❌ Validation FAILED for data:', req.body);
       logger.warn('Invalid form data received', {
         hasBody: !!req.body,
         bodyType: typeof req.body,
@@ -126,9 +129,15 @@ export default async function handler(
         message: 'Invalid form data'
       });
     }
+    
+    console.log('✅ Validation PASSED');
 
     // Sanitize the form data
     const sanitizedData = sanitizeFormData(req.body);
+    
+    console.log('🔍 After sanitization - Address value:', sanitizedData.address);
+    console.log('🔍 Address type:', typeof sanitizedData.address);
+    console.log('🔍 Address truthy:', !!sanitizedData.address);
     
     logger.info('Processing form submission', { 
       name: sanitizedData.name,
