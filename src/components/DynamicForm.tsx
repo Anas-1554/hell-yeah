@@ -6,6 +6,7 @@ import { MultipleChoiceQuestion } from './questions/MultipleChoiceQuestion';
 import { ContactQuestion } from './questions/ContactQuestion';
 import { FileUploadQuestion } from './questions/FileUploadQuestion';
 import { PartyParticles } from './ui/party-particles';
+import VerificationDialog from './VerificationDialog';
 import type { FormConfig } from '../types/form';
 
 interface DynamicFormProps {
@@ -19,6 +20,8 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
   const [showMilestoneToast, setShowMilestoneToast] = useState(false);
   const [milestoneMessage, setMilestoneMessage] = useState('');
   const [celebratedMilestones, setCelebratedMilestones] = useState<Set<number>>(new Set());
+  const [showVerificationDialog, setShowVerificationDialog] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Check if we should show progress notification immediately
   const shouldShowProgressNotification = (() => {
@@ -139,9 +142,53 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
   };
 
   const handleSubmit = async () => {
-    await submitForm();
-    setShowThankYou(true);
-    onComplete?.(state.answers);
+    // Show verification dialog instead of submitting directly
+    setShowVerificationDialog(true);
+  };
+
+  const handleVerificationSuccess = async (turnstileToken: string) => {
+    setShowVerificationDialog(false);
+    setIsSubmitting(true);
+    
+    try {
+      // Submit form with turnstile token
+      await submitFormWithTurnstile(turnstileToken);
+      setShowThankYou(true);
+      onComplete?.(state.answers);
+    } catch (error) {
+      console.error('Form submission failed:', error);
+      // You could show an error message here
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleVerificationError = (error: string) => {
+    setShowVerificationDialog(false);
+    console.error('Verification failed:', error);
+    // You could show an error message here
+  };
+
+  const submitFormWithTurnstile = async (turnstileToken: string) => {
+    const formData = {
+      ...state.answers,
+      timestamp: new Date().toISOString(),
+      turnstileToken
+    };
+
+    const response = await fetch('/api/submit-form', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Form submission failed');
+    }
+
+    return response.json();
   };
 
   const handleAnswerChange = useCallback((value: string | string[] | number | boolean) => {
@@ -233,13 +280,13 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
             </a>
           </div>
 
-          <div className="container mx-auto px-4 py-8">
+          <div className="container mx-auto px-4 py-8 min-h-screen flex items-center justify-center">
             {/* Thank You Section */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-center mb-12 pt-16"
+              className="text-center"
             >
               <motion.div
                 initial={{ scale: 0 }}
@@ -465,5 +512,13 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({ config, onComplete }) 
         </div>
       </div>
     </div>
+
+    {/* Verification Dialog */}
+    <VerificationDialog
+      isOpen={showVerificationDialog}
+      onClose={() => setShowVerificationDialog(false)}
+      onVerified={handleVerificationSuccess}
+      onError={handleVerificationError}
+    />
   );
 }; 
